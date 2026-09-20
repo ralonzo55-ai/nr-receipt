@@ -3,6 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
+<!-- receipt page r3 — 20 Sep 2026. r2 fixed the cash row and long names;
+     r3 removed the version line from the footer, because a subscriber
+     should not be reading build labels on their own receipt. The version
+     stays here and in the generator tag: view-source still answers
+     "which copy is this?" without putting it in front of the customer. -->
+<meta name="generator" content="NR receipt page r3">
 <title>Receipt — N&amp;R SOLARTECH SOLUTION</title>
 <style>
   :root{--ink:#16232d;--dim:#5a7285;--line:#dde5ec;--teal:#0f6d7a;--save:#0d7a4a;--page:#eef2f6}
@@ -51,10 +57,6 @@
   .save .sline b{color:var(--save);font-size:16px;white-space:nowrap}
   .foot{font-size:12.5px;color:var(--dim);text-align:center;margin:14px 0 0;
     border-top:1px dashed #cfd8e0;padding-top:12px}
-  /* Which copy is live. A page served from a cache looks exactly like a
-     page that was never uploaded; this is how you tell them apart in
-     one glance, on the phone, without a laptop. */
-  .foot .ver{display:block;margin-top:6px;font-size:11px;color:#9bacba;letter-spacing:.3px}
   .btn{display:block;width:100%;margin-top:12px;padding:12px;border-radius:10px;border:0;
     background:var(--teal);color:#fff;font-size:16px;font-weight:700}
   .bad{background:#fff3f3;border:1px solid #f3c6c6;color:#8a1f24;border-radius:10px;padding:14px}
@@ -150,8 +152,7 @@ function lines(f){
         (total ? "<div class='sline'><span>Saved since you joined</span><b>"+peso(total)+"</b></div>" : "")+
       "</div>" : "")+
     "<p class='foot'>This is a copy of your kiosk receipt, read from the code on it.<br>"+
-      "No change is given. Questions: Roy 09465363493"+
-      "<span class='ver'>page r2</span></p>"+
+      "No change is given. Questions: Roy 09465363493</p>"+
     "<button class='btn' onclick='window.print()'>Save or print this receipt</button>";
   document.title = "Receipt " + or;
 })();
