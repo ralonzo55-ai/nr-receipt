@@ -20,8 +20,28 @@
   .r{display:flex;justify-content:space-between;gap:14px;padding:6px 0;
     border-bottom:1px dotted #e3eaf0}
   .r:last-child{border-bottom:0}
-  .r > span:first-child{min-width:0;flex:1}
+  /* :first-child, not span:first-child — the name row's left side is a
+     <b>, so the old selector missed it and GARCILLANO_COMPOUND, one long
+     unbroken word, pushed the row off a narrow phone (r2). */
+  .r > :first-child{min-width:0;flex:1;overflow-wrap:anywhere}
   .r > span:last-child{white-space:nowrap;text-align:right}
+  /* CASH INSERTED CAN BE LONG. Every other value is one figure, so
+     nowrap is right for them; this one is a list — "2 x P500 + 3 x
+     P100 + 1 x P50..." — and nowrap pushed it off the right edge of
+     the phone as soon as a few notes went in, printing the list over
+     the top of its own label.
+
+     r2: this row is no longer a flex row at all. Flex was asking the
+     label to shrink and the value not to, and how far each gave way
+     depended on the phone. A block row cannot do that: the label is
+     its own line, the list is its own line underneath, and the list
+     wraps inside the paper whatever it holds. Nothing to negotiate,
+     so nothing to get wrong. */
+  .r.cash{display:block}
+  .r.cash > span:first-child{display:block;text-align:left}
+  .r.cash > span:last-child{display:block;white-space:normal;
+    text-align:right;overflow-wrap:anywhere;word-break:break-word;
+    max-width:100%;margin-top:2px}
   .tot{border-top:2px solid var(--ink);border-bottom:0;margin-top:8px;padding-top:8px;
     font-weight:800;font-size:19px;color:var(--teal)}
   .save{background:#e9f7f0;border:1px solid #bfe6d4;border-radius:10px;padding:10px 12px;margin-top:12px}
@@ -31,6 +51,10 @@
   .save .sline b{color:var(--save);font-size:16px;white-space:nowrap}
   .foot{font-size:12.5px;color:var(--dim);text-align:center;margin:14px 0 0;
     border-top:1px dashed #cfd8e0;padding-top:12px}
+  /* Which copy is live. A page served from a cache looks exactly like a
+     page that was never uploaded; this is how you tell them apart in
+     one glance, on the phone, without a laptop. */
+  .foot .ver{display:block;margin-top:6px;font-size:11px;color:#9bacba;letter-spacing:.3px}
   .btn{display:block;width:100%;margin-top:12px;padding:12px;border-radius:10px;border:0;
     background:var(--teal);color:#fff;font-size:16px;font-weight:700}
   .bad{background:#fff3f3;border:1px solid #f3c6c6;color:#8a1f24;border-radius:10px;padding:14px}
@@ -110,7 +134,7 @@ function lines(f){
     "<div class='r'><b>"+name+"</b><span>"+(site||"")+"</span></div>"+
     lines(q("f"))+
     "<div class='r tot'><span>Paid</span><span>"+peso(q("a"))+"</span></div>"+
-    (cash ? "<div class='r'><span>Cash inserted</span><span>"+
+    (cash ? "<div class='r cash'><span>Cash inserted</span><span>"+
         cash.split(" ").map(function(bit){
           var q = bit.split("x");
           return q.length===2 ? q[0]+" \u00d7 "+peso(q[1]) : bit;
@@ -126,7 +150,8 @@ function lines(f){
         (total ? "<div class='sline'><span>Saved since you joined</span><b>"+peso(total)+"</b></div>" : "")+
       "</div>" : "")+
     "<p class='foot'>This is a copy of your kiosk receipt, read from the code on it.<br>"+
-      "No change is given. Questions: Roy 09465363493</p>"+
+      "No change is given. Questions: Roy 09465363493"+
+      "<span class='ver'>page r2</span></p>"+
     "<button class='btn' onclick='window.print()'>Save or print this receipt</button>";
   document.title = "Receipt " + or;
 })();
